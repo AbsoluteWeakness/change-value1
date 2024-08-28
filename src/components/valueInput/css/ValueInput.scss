@@ -1,0 +1,36 @@
+.valueInput{
+   margin: 30px;
+
+    .ant-input-number{
+      margin-bottom: 20px;
+      flex-grow: 1;
+        width: 350px;
+        height: 170px;
+        padding: 10px;
+        font-size: 0.9cm;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+    .ant-select{
+      width: 250px;
+      height: 50px;
+    }
+
+    &:focus{
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .input{
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+}
+
+
+    
