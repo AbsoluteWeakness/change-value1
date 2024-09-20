@@ -2,7 +2,7 @@ import React from 'react';
 
 import './App.css';
 import Converter from './components/valueConverter/Converter';
-import NewsFeed from './components/news/newsFeed/newsFeed';
+import NewsFeed from './components/newsFeed/newsFeed';
 
 const App: React.FC = () => {
   return (

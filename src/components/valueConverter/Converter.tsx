@@ -17,9 +17,10 @@ const FIAT_API_KEY = '3bfc9a0ce38830e1ee147b3d'
 const Converter: React.FC = () => {
 
     const [value, setValue] = useState('10');
-    const [fromCurrency, setFromCurrency] = useState<string>('USD');
-    const [toCurrency, setToCurrency] = useState<string>('RUB');
+    const [fromCurrency, setFromCurrency] = useState<string>('RUB');
+    const [toCurrency, setToCurrency] = useState<string>('USD');
     const [convertedValue, setConvertedValue] = useState<string>('');
+    const [commissionRate, setCommissionRate] = useState<string>('0') 
 
     
 
@@ -49,10 +50,27 @@ const Converter: React.FC = () => {
         return cryptoCurrencies.includes(currency.toUpperCase());
     };
 
-    useEffect(() => {
 
+    useEffect(() => { //Не уверен что 2 useEffect правильно
+        const fetchLocalCurrency = async () => {
+            try {
+                const response = await fetch("https://ipapi.co/currency/");
+                const localCurrency = await response.text();
+
+            
+                setFromCurrency(localCurrency);
+            } catch (error) {
+                console.error("Ошибка при получении локальной валюты:", error);
+            }
+        };
+        fetchLocalCurrency();
+    },[]);
+
+    useEffect(() => {
+        
         const convertCurrency = async (fromCurrency: string, toCurrency: string, amount: number) => {
             let exchangeRate: number;
+            let amountBeforeCommision: number;
 
             if (!isCrypto(fromCurrency) && !isCrypto(toCurrency)) {
                 const response = await axios.get(`${FIAT_API_URL}/${FIAT_API_KEY}/latest/${fromCurrency}`);
@@ -76,8 +94,13 @@ const Converter: React.FC = () => {
                     exchangeRate = 1 / exchangeRate;
                 }
             }
-
-            const convertedAmount = amount * exchangeRate;
+            if (Number(commissionRate) >= 0) {
+                amountBeforeCommision = amount * (1 - Number(commissionRate) / 100);
+            } else {
+                setCommissionRate('0');
+               amountBeforeCommision = amount / 100  
+            } 
+            const convertedAmount = amountBeforeCommision * exchangeRate;
             return convertedAmount;
         };
 
@@ -96,7 +119,7 @@ const Converter: React.FC = () => {
         return () => {
             clearInterval(interval);
         }
-    },[fromCurrency,toCurrency,value])
+    },[fromCurrency,toCurrency,value, commissionRate])
 
     return (
          
@@ -121,7 +144,18 @@ const Converter: React.FC = () => {
 
 
                 />
-
+                <div>
+                    <label htmlFor="commissionRate">Комиссия (%):</label>
+                    <input
+                        type="number"
+                        id="commissionRate"
+                        value={commissionRate}
+                        onChange={(e) => setCommissionRate(e.target.value)}
+                        min='0'
+                        max="100"
+                        step="0.1"
+                    />
+                </div>
             </div>
 
         </div>
