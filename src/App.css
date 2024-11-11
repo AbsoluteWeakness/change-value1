@@ -20,7 +20,8 @@
   height: 20%;
   object-fit: fill;
   z-index: -1;
-  background-color: #f0f0f0;
+  background: linear-gradient(135deg, #f7fafc, #e2e8f0);
+  color: #2d3748;
 }
 
 #background-video1 {
@@ -30,6 +31,8 @@
   width: 50%;
   height: 20%;
   z-index: 2;
+ 
+    color: #2d3748;
 }
 
 .App-header {
@@ -45,4 +48,9 @@
 
 .App-link {
   color: #61dafb;
+}
+
+body {
+  background: linear-gradient(135deg, #f7fafc, #e2e8f0);
+  color: #2d3748;
 }
